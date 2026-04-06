@@ -51,13 +51,5 @@ VITE_GEMINI_API_KEY=sizin_api_anahtariniz_buraya
 npm run dev
 \`\`\`
 
----
 
-## 👨‍💻 Geliştirici (Developer)
-**Zafer** - Bilgisayar Mühendisliği Öğrencisi & Yazılım Geliştirici  
 
-Sektörde yenilikçi AI & Frontend mimarilerini kullanan, temiz kod (clean code) tutkunu ve modern kullanıcı deneyimleri yaratan projeler geliştirmeye odaklanıyorum.
-* 💬 **LinkedIn:** [LinkedIn Profilinizi Buraya Ekleyin]
-* 📧 **E-Posta:** [E-Posta Adresinizi Ekleyebilirsiniz]
-
-> *"Agent-driven development and elegant UI crafting."*
