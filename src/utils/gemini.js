@@ -13,20 +13,19 @@ export const analyzeMatch = async (apiKey, cvText, jobText) => {
     
     YÖNERGELER:
     1. Açıklamalar ve özetler (scoreExplanation vb.) KESİNLİKLE çok sade, net ve kısa (1-2 cümle) olmalıdır.
-    2. Genel uyum skorunu (0-100) rastgele verme. İş ilanındaki gereksinimlerin "Önem Derecesi" (importance) ile adayın "Karşılama Skoru" (candidateRating) parametrelerini çarparak ağırlıklı bir final skoru (score) oluştur.
+    2. Adayın "Karşılama Skoru" (candidateRating) parametresini belirlerken ÇOK ACIMASIZ VE KATI ol. Eğer bir yetenek/araç CV'de açıkça yazmıyorsa veya deneyim yetersizse kesinlikle 0 veya 1 ver. Tahmin yürütme.
     3. Kullanıcının mevcut CV metnini ilana TAM uyacak şekilde, profesyonel bir şirket jargonunda ve Action Verb'ler kullanarak yepyeni, optimize edilmiş bir metin olarak yeniden yaz (improvedCV). Sadece CV'nin kendisini döndür.
     4. İlan için kurumsal, şık ve dikkat çekici bir "İlgi Mektubu / Ön Yazı (Cover Letter)" oluştur. Karşı tarafı yormayan, yetenekleri ilana bağlayan 3-4 paragraflık akıcı bir metin olsun (coverLetter).
     
     Yanıtını SADECE aşağıdaki JSON formatında vermelisin. Başka hiçbir açıklama veya markdown satırı kullanma.
 
     {
-      "score": <0 ile 100 arası genel puan>,
-      "scoreExplanation": "<Genel skorun ve uyumun kısa özeti>",
+      "scoreExplanation": "<Genel uyumun kısa özeti>",
       "evaluatedSkills": [
         {
           "name": "<Yetenek, deneyim veya gereksinim adı>",
-          "importance": <1'den 5'e kadar ilandaki önem derecesi: 5 çok kritik, 1 tercih sebebi>,
-          "candidateRating": <0'dan 5'e kadar adayın sahip olma skoru: 5 tam sahip, 0 hiç yok>
+          "importance": <1'den 5'e kadar ilandaki önem derecesi: 5 çok kritik/zorunlu, 1 sadece tercih sebebi>,
+          "candidateRating": <0'dan 5'e kadar adayın sahip olma skoru: 5 tam uzman/yıllarca deneyimli, 0 hiç yok>
         }
       ],
       "strengths": ["<çok kısa güçlü yön>"],
@@ -47,14 +46,39 @@ export const analyzeMatch = async (apiKey, cvText, jobText) => {
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
-        temperature: 0.2, 
+        temperature: 0.1, 
         responseMimeType: 'application/json',
       }
     });
 
     const resultText = response.text;
-    const cleanText = resultText.replace(/```json/gi, '').replace(/```/g, '').trim();
-    return JSON.parse(cleanText);
+    const cleanText = resultText.replace(/\`\`\`json/gi, '').replace(/\`\`\`/g, '').trim();
+    
+    const parsedData = JSON.parse(cleanText);
+
+    // AI'ın matematiksel halüsinasyonunu engellemek için skoru sistemde kesin formülle hesaplıyoruz:
+    if (parsedData.evaluatedSkills && parsedData.evaluatedSkills.length > 0) {
+      let maxPossibleScore = 0;
+      let actualScore = 0;
+      
+      parsedData.evaluatedSkills.forEach(skill => {
+        const imp = Number(skill.importance) || 1;
+        const rating = Number(skill.candidateRating) || 0;
+        
+        maxPossibleScore += (imp * 5); 
+        actualScore += (imp * rating);
+      });
+      
+      if (maxPossibleScore > 0) {
+        parsedData.score = Math.round((actualScore / maxPossibleScore) * 100);
+      } else {
+        parsedData.score = 0;
+      }
+    } else {
+      parsedData.score = 0;
+    }
+
+    return parsedData;
   } catch (error) {
     console.error("Gemini API Error:", error);
     throw new Error('Analiz sırasında bir hata oluştu. Lütfen API anahtarınızın doğruluğundan emin olun.');
