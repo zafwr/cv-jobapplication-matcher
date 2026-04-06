@@ -38,7 +38,7 @@ const ResultsDashboard = ({ result }) => {
               {result.evaluatedSkills.filter(s => s.candidateRating >= 2).length > 0 ? (
                 result.evaluatedSkills.filter(s => s.candidateRating >= 2).map((skill, index) => (
                   <span key={index} className="skill-tag match">
-                    {skill.name} {skill.importance === 5 && '⭐'}
+                    {skill.name}
                   </span>
                 ))
               ) : (
@@ -53,7 +53,7 @@ const ResultsDashboard = ({ result }) => {
               {result.evaluatedSkills.filter(s => s.candidateRating < 2).length > 0 ? (
                 result.evaluatedSkills.filter(s => s.candidateRating < 2).map((skill, index) => (
                   <span key={index} className="skill-tag missing">
-                    {skill.name} {skill.importance >= 4 && <strong style={{color: 'var(--danger)'}}>(Kritik)</strong>}
+                    {skill.name}
                   </span>
                 ))
               ) : (
