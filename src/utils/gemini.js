@@ -80,7 +80,7 @@ export const analyzeMatch = async (apiKey, cvText, jobText) => {
 
     return parsedData;
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    throw new Error('Analiz sırasında bir hata oluştu. Lütfen API anahtarınızın doğruluğundan emin olun.');
+    console.error("Gemini API Error Orijinal:", error);
+    throw new Error('Analiz Hatası: ' + (error?.message || 'Bilinmeyen Hata, tarayıcı konsoluna (F12) bakın. Lütfen API Anahtarınızın güncel ve doğru olduğundan (ve terminali yeniden başlattığınızdan) emin olun.'));
   }
 };
