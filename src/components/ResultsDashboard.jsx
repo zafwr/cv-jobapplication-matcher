@@ -30,33 +30,38 @@ const ResultsDashboard = ({ result }) => {
         </p>
       </div>
 
-      <div className="skills-grid">
-        <div className="feedback-card">
-          <h3><CheckCircle2 color="var(--success)" /> Eşleşen Yetenekler</h3>
-          <div className="skill-list">
-            {result.matchingSkills?.length > 0 ? (
-              result.matchingSkills.map((skill, index) => (
-                <span key={index} className="skill-tag match">{skill}</span>
-              ))
-            ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Eşleşen belirgin bir yetenek bulunamadı.</p>
-            )}
+      {result.evaluatedSkills && result.evaluatedSkills.length > 0 && (
+        <div className="feedback-card" style={{ marginTop: '2rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <TrendingUp color="var(--accent)" /> Detaylı Yetenek Analizi
+          </h3>
+          <div className="evaluated-skills-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {result.evaluatedSkills.map((skill, index) => (
+              <div key={index} className="skill-evaluation-item" style={{ background: '#141414', padding: '1rem', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <strong style={{ color: 'var(--text-main)' }}>{skill.name}</strong>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>İlanın İstediği Önem: {skill.importance}/5</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ flex: 1, height: '8px', background: '#333', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div 
+                      style={{ 
+                        height: '100%', 
+                        width: `${(skill.candidateRating / 5) * 100}%`,
+                        background: skill.candidateRating >= skill.importance ? 'var(--success)' : (skill.candidateRating > 0 ? 'var(--warning)' : 'var(--danger)'),
+                        transition: 'width 1s ease-in-out'
+                      }} 
+                    />
+                  </div>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 'bold', width: '50px', textAlign: 'right', color: skill.candidateRating >= skill.importance ? 'var(--success)' : (skill.candidateRating > 0 ? 'var(--warning)' : 'var(--danger)') }}>
+                    Skor: {skill.candidateRating}/5
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-
-        <div className="feedback-card">
-          <h3><XCircle color="var(--danger)" /> Eksik (Geliştirilecek) Yetenekler</h3>
-          <div className="skill-list">
-            {result.missingSkills?.length > 0 ? (
-              result.missingSkills.map((skill, index) => (
-                <span key={index} className="skill-tag missing">{skill}</span>
-              ))
-            ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Harika! İlandaki temel yeteneklerin tümüne sahipsiniz.</p>
-            )}
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="feedback-section">
         <div className="feedback-card strengths" style={{ borderLeftColor: 'var(--success)' }}>

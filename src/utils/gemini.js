@@ -13,17 +13,22 @@ export const analyzeMatch = async (apiKey, cvText, jobText) => {
     
     YÖNERGELER:
     1. Açıklamalar ve özetler (scoreExplanation vb.) KESİNLİKLE çok sade, net ve kısa (1-2 cümle) olmalıdır.
-    2. Uyum skorunu (0-100) rastgele verme. Yetenek, teknoloji ve deneyim uyumuna göre titizlikle hesapla.
+    2. Genel uyum skorunu (0-100) rastgele verme. İş ilanındaki gereksinimlerin "Önem Derecesi" (importance) ile adayın "Karşılama Skoru" (candidateRating) parametrelerini çarparak ağırlıklı bir final skoru (score) oluştur.
     3. Kullanıcının mevcut CV metnini ilana TAM uyacak şekilde, profesyonel bir şirket jargonunda ve Action Verb'ler kullanarak yepyeni, optimize edilmiş bir metin olarak yeniden yaz (improvedCV). Sadece CV'nin kendisini döndür.
     4. İlan için kurumsal, şık ve dikkat çekici bir "İlgi Mektubu / Ön Yazı (Cover Letter)" oluştur. Karşı tarafı yormayan, yetenekleri ilana bağlayan 3-4 paragraflık akıcı bir metin olsun (coverLetter).
     
     Yanıtını SADECE aşağıdaki JSON formatında vermelisin. Başka hiçbir açıklama veya markdown satırı kullanma.
 
     {
-      "score": <0 ile 100 arası tam sayı belirten genel puan>,
-      "scoreExplanation": "<Skorun neden bu kadar olduğunu anlatan sade 2 cümlelik özet>",
-      "matchingSkills": ["<eşleşen yetenek>"],
-      "missingSkills": ["<eksik yetenek>"],
+      "score": <0 ile 100 arası genel puan>,
+      "scoreExplanation": "<Genel skorun ve uyumun kısa özeti>",
+      "evaluatedSkills": [
+        {
+          "name": "<Yetenek, deneyim veya gereksinim adı>",
+          "importance": <1'den 5'e kadar ilandaki önem derecesi: 5 çok kritik, 1 tercih sebebi>,
+          "candidateRating": <0'dan 5'e kadar adayın sahip olma skoru: 5 tam sahip, 0 hiç yok>
+        }
+      ],
       "strengths": ["<çok kısa güçlü yön>"],
       "suggestions": ["<çok kısa gelişim önerisi>"],
       "improvedCV": "<CV'nin tamamının ilana özel, zenginleştirilmiş, yapısal olarak çok daha profesyonel olarak baştan yazılmış hali. Uzun olabilir.>",
