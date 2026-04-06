@@ -43,9 +43,8 @@ function App() {
       <header className="header">
         <h1 className="text-gradient">
           <BrainCircuit size={40} style={{ verticalAlign: 'middle', marginRight: '10px' }} />
-          CV & İş İlanı Eşleştirici
+          CV - İş İlanı Eşleştirici
         </h1>
-        <p>Yapay Zeka Destekli Kariyer Danışmanın. Başvurularında ne kadar uyumlu olduğunu hemen öğren.</p>
       </header>
 
       {error && (
